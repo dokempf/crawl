@@ -88,7 +88,7 @@ protected:
 class UI
 {
 public:
-    UI() : margin({0,0,0,0}), flex_grow(1), align_self(UI_ALIGN_UNSET), expand_h(false), expand_v(false), cached_sr_valid{false, false}, m_parent(nullptr) {};
+    UI() : margin({0,0,0,0}), flex_grow(1), align_self(UI_ALIGN_UNSET), expand_h(false), expand_v(false), cached_sr_valid{false, false}, alloc_queued(false), m_parent(nullptr) {};
     ~UI() {
         UI::slots.event.remove_by_target(this);
     }
@@ -104,6 +104,7 @@ public:
     virtual void _allocate_region();
     void _set_parent(UI* p);
     void _invalidate_sizereq();
+    void _queue_allocation();
 
     // Wrapper functions which handle common behavior
     // - margins
@@ -141,7 +142,7 @@ protected:
     i4 m_region;
 
 private:
-    bool cached_sr_valid[2];
+    bool cached_sr_valid[2], alloc_queued;
     UISizeReq cached_sr[2];
     int cached_sr_pw;
     UI* m_parent;
