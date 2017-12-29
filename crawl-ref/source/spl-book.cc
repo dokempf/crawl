@@ -276,9 +276,7 @@ int spell_rarity(spell_type which_spell)
 
 void read_book(item_def &book)
 {
-    clrscr();
     describe_item(book);
-    redraw_screen();
 }
 
 /**
