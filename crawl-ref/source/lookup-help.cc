@@ -15,6 +15,7 @@
 #include "colour.h"
 #include "cloud.h"
 #include "database.h"
+#include "dbg-util.h"
 #include "decks.h"
 #include "describe.h"
 #include "describe-god.h"
@@ -1026,6 +1027,15 @@ static int _describe_spell(const string &key, const string &suffix,
     return 0;
 }
 
+static int _describe_skill(const string &key, const string &suffix,
+                             string footer)
+{
+    const string skill_name = key.substr(0, key.size() - suffix.size());
+    const skill_type skill = skill_from_name(skill_name.c_str());
+    describe_skill(skill);
+    return 0;
+}
+
 static int _describe_ability(const string &key, const string &suffix,
                              string footer)
 {
@@ -1224,7 +1234,7 @@ static const vector<LookupType> lookup_types = {
                _describe_spell, lookup_type::db_suffix),
     LookupType('K', "skill", nullptr, nullptr,
                nullptr, _get_skill_keys, _skill_menu_gen,
-               _describe_generic, lookup_type::none),
+               _describe_skill, lookup_type::none),
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
                _describe_ability, lookup_type::db_suffix),

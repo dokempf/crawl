@@ -4411,9 +4411,10 @@ string get_ghost_description(const monster_info &mi, bool concise)
 
 void describe_skill(skill_type skill)
 {
-    ostringstream data;
-    data << get_skill_description(skill, true);
-    show_description(data.str());
+    describe_info inf;
+    inf.title = skill_name(skill);
+    inf.body << get_skill_description(skill, false);
+    show_description(inf);
 }
 
 // only used in tiles
