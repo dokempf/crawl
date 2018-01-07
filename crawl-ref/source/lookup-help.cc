@@ -1074,8 +1074,8 @@ static int _describe_item(const string &key, const string &suffix,
     item_def item;
     if (!get_item_by_exact_name(item, key.c_str()))
         die("Unable to get item %s by name", key.c_str());
-    string stats = get_item_description(item, true, false, true);
-    return _describe_key(key, suffix, footer, stats);
+    describe_item(item);
+    return 0;
 }
 
 /**
