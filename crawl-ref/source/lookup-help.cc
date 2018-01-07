@@ -1026,6 +1026,15 @@ static int _describe_spell(const string &key, const string &suffix,
     return 0;
 }
 
+static int _describe_ability(const string &key, const string &suffix,
+                             string footer)
+{
+    const string abil_name = key.substr(0, key.size() - suffix.size());
+    const ability_type abil = ability_by_name(abil_name.c_str());
+    describe_ability(abil);
+    return 0;
+}
+
 /**
  * Describe the card with the given name.
  *
@@ -1218,7 +1227,7 @@ static const vector<LookupType> lookup_types = {
                _describe_generic, lookup_type::none),
     LookupType('A', "ability", _recap_ability_keys, _ability_filter,
                nullptr, nullptr, _ability_menu_gen,
-               _describe_generic, lookup_type::db_suffix),
+               _describe_ability, lookup_type::db_suffix),
     LookupType('C', "card", _recap_card_keys, _card_filter,
                nullptr, nullptr, _card_menu_gen,
                _describe_card, lookup_type::db_suffix),
