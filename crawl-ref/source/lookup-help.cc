@@ -1097,6 +1097,15 @@ static int _describe_item(const string &key, const string &suffix,
     return 0;
 }
 
+static int _describe_feature(const string &key, const string &suffix,
+                             string footer)
+{
+    const string feat_name = key.substr(0, key.size() - suffix.size());
+    const dungeon_feature_type feat = feat_by_desc(feat_name);
+    describe_feature_type(feat);
+    return 0;
+}
+
 /**
  * Describe the god with the given name.
  *
@@ -1246,7 +1255,7 @@ static const vector<LookupType> lookup_types = {
                _describe_item, lookup_type::none),
     LookupType('F', "feature", _recap_feat_keys, _feature_filter,
                nullptr, nullptr, _feature_menu_gen,
-               _describe_generic, lookup_type::none),
+               _describe_feature, lookup_type::none),
     LookupType('G', "god", nullptr, nullptr,
                nullptr, _get_god_keys, _god_menu_gen,
                _describe_god, lookup_type::none),

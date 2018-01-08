@@ -2435,6 +2435,24 @@ void describe_feature_wide(const coord_def& pos)
     ui_pop_layout();
 }
 
+void describe_feature_type(dungeon_feature_type feat)
+{
+    describe_info inf;
+    string name = feature_description(feat, NUM_TRAPS, "", DESC_A, false);
+    string title = uppercase_first(name);
+    if (!ends_with(title, ".") && !ends_with(title, "!") && !ends_with(title, "?"))
+        title += ".";
+    inf.title = title;
+    inf.body << getLongDescription(name);
+#ifdef USE_TILE
+    const tileidx_t idx = tileidx_feature_base(feat);
+    tile_def tile = tile_def(idx, get_dngn_tex(idx));
+    show_description(inf, &tile);
+#else
+    show_description(inf);
+#endif
+}
+
 void get_item_desc(const item_def &item, describe_info &inf)
 {
     // Don't use verbose descriptions if the item contains spells,
