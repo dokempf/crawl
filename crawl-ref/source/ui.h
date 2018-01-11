@@ -127,11 +127,7 @@ protected:
 class UIText : public UI
 {
 public:
-    UIText() : wrap_text(false), ellipsize(false)
-#ifdef USE_TILE_LOCAL
-    , m_font_buf(tiles.get_crt_font()), m_wrapped_size{ -1, -1 }
-#endif
-    {}
+    UIText() : wrap_text(false), ellipsize(false), m_wrapped_size{ -1, -1 } {}
     UIText(string text) : UIText()
     {
         set_text(formatted_string::parse_string(text));
@@ -150,8 +146,9 @@ protected:
 
     formatted_string m_text;
 #ifdef USE_TILE_LOCAL
+    struct brkpt { unsigned int op, line; };
+    vector<brkpt> m_brkpts;
     formatted_string m_text_wrapped;
-    FontBuffer m_font_buf;
 #else
     vector<formatted_string> m_wrapped_lines;
 #endif

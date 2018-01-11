@@ -299,6 +299,24 @@ void UIText::wrap_text_to_size(int width, int height)
         m_text_wrapped = tiles.get_crt_font()->split(m_text, width, height);
     else
         m_text_wrapped = m_text;
+
+    m_brkpts.clear();
+    m_brkpts.emplace_back(brkpt({0, 0}));
+    unsigned tally = 0, acc = 0;
+    for (unsigned i = 0; i < m_text_wrapped.ops.size(); i++)
+    {
+        formatted_string::fs_op &op = m_text_wrapped.ops[i];
+        if (op.type != FSOP_TEXT)
+            continue;
+        if (acc > 0)
+        {
+            m_brkpts.emplace_back(brkpt({i, tally}));
+            acc = 0;
+        }
+        unsigned n = count(op.text.begin(), op.text.end(), '\n');
+        acc += n;
+        tally += n;
+    }
 #else
     m_wrapped_lines.clear();
     formatted_string::parse_string_to_multiple(m_text.to_colour_string(), m_wrapped_lines, width);
@@ -317,15 +335,48 @@ void UIText::wrap_text_to_size(int width, int height)
 
 void UIText::_render()
 {
-#ifdef USE_TILE_LOCAL
-    m_font_buf.draw();
-#else
     i4 region = m_region;
     if (scissor_stack.size() > 0)
         region = aabb_intersect(region, scissor_stack.top());
     if (region[2] <= 0 || region[3] <= 0)
         return;
 
+#ifdef USE_TILE_LOCAL
+    const int line_height = tiles.get_crt_font()->char_height();
+    const unsigned line_min = (region[1]-m_region[1]) / line_height;
+    const unsigned line_max = (region[1]+region[3]-m_region[1]) / line_height;
+
+    int line_off = 0;
+    int ops_min = 0, ops_max = m_text_wrapped.ops.size();
+    {
+        int i = 1;
+        for (; i < (int)m_brkpts.size(); i++)
+            if (m_brkpts[i].line >= line_min)
+            {
+                ops_min = m_brkpts[i-1].op;
+                line_off = m_brkpts[i-1].line;
+                break;
+            }
+        for (; i < (int)m_brkpts.size(); i++)
+            if (m_brkpts[i].line > line_max)
+            {
+                ops_max = m_brkpts[i].op;
+                break;
+            }
+    }
+
+    formatted_string slice;
+    slice.ops = vector<formatted_string::fs_op>(
+        m_text_wrapped.ops.begin()+ops_min,
+        m_text_wrapped.ops.begin()+ops_max);
+
+    // XXX: should be moved into a new function render_formatted_string()
+    // in FTFontWrapper, that, like render_textblock(), would automatically
+    // handle swapping atlas glyphs as necessary.
+    FontBuffer m_font_buf(tiles.get_crt_font());
+    m_font_buf.add(slice, m_region[0], m_region[1]+line_height*line_off);
+    m_font_buf.draw();
+#else
     const auto& lines = m_wrapped_lines;
     for (size_t i = 0; i < min(lines.size(), (long unsigned)region[3]); i++)
     {
@@ -381,10 +432,6 @@ UISizeReq UIText::_get_preferred_size(int dim, int prosp_width)
 void UIText::_allocate_region()
 {
     wrap_text_to_size(m_region[2], m_region[3]);
-#ifdef USE_TILE_LOCAL
-    m_font_buf.clear();
-    m_font_buf.add(m_text_wrapped, m_region[0], m_region[1]);
-#endif
 }
 
 void UIImage::set_tile(tile_def tile)
