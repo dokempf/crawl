@@ -8,6 +8,7 @@
 #include <functional>
 
 #include "format.h"
+#include "KeymapContext.h"
 #include "tilefont.h"
 #include "tiledef-gui.h"
 #include "windowmanager.h"
@@ -461,7 +462,7 @@ protected:
 };
 #endif
 
-void ui_push_layout(shared_ptr<UI> root);
+void ui_push_layout(shared_ptr<UI> root, KeymapContext km = KMC_DEFAULT);
 void ui_pop_layout();
 void ui_pump_events();
 
