@@ -275,6 +275,54 @@ a:hover {
     z-index: 2000;
 }
 
+#ui-stack {
+    z-index: 3000;
+}
+
+.ui-popup-overlay {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+    background-color: rgba(0,0,0,0.7);
+}
+
+.ui-popup {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    bottom: 0px;
+    right: 0px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.ui-popup-outer {
+    margin: 50px;
+    max-height: calc(100vh - 100px);
+
+    padding: 20px;
+    border: 1px solid lightgray;
+    background-color: black;
+
+    display: flex;
+    z-index: 0;
+}
+
+.ui-popup-inner {
+    z-index: 0;
+    display: flex;
+    overflow: hidden;
+}
+
+.hidden, .templates {
+    display: none !important;
+}
+
 /* These are just here for compatibility with older versions */
 .fg0 { color: rgb(  0,   0,   0); }
 .fg1 { color: rgb(  0,  82, 255); }
