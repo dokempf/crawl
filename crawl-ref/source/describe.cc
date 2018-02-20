@@ -177,7 +177,7 @@ int show_description(const describe_info &inf, const tile_def *tile)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
 #endif
 
     ui_push_layout(move(popup));
@@ -2426,7 +2426,7 @@ void describe_feature_wide(const coord_def& pos)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
 #endif
 
     ui_push_layout(move(popup));
@@ -2785,7 +2785,7 @@ bool describe_item(item_def &item, function<void (string&)> fixup_desc)
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
 #endif
 
     ui_push_layout(move(popup));
@@ -3219,7 +3219,7 @@ void describe_spell(spell_type spell, const monster_info *mon_owner,
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
 #endif
 
     ui_push_layout(move(popup));
@@ -4513,7 +4513,7 @@ int describe_monsters(const monster_info &mi, bool force_seen,
     });
 
 #ifdef USE_TILE_WEB
-    tiles_crt_control show_as_menu(CRT_MENU);
+    tiles_crt_control show_as_menu(CRT_MENU, "crt_shrink");
 #endif
 
     ui_push_layout(move(popup));
