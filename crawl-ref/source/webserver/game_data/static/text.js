@@ -15,9 +15,8 @@ define(["jquery", "comm"], function ($, comm) {
         var lines = area.children("span");
         for (var i = lines.length; i <= line; ++i)
         {
-            if (i != 0)
-                area.append("<br>");
             area.append(line_span.clone());
+            area.append("<br>");
         }
         return area.children("span").eq(line);
     }
