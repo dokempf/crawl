@@ -1289,7 +1289,7 @@ void Menu::deselect_all(bool update_view)
 {
     for (int i = 0, count = items.size(); i < count; ++i)
     {
-        if (items[i]->level == MEL_ITEM)
+        if (items[i]->level == MEL_ITEM && items[i]->selected())
         {
             items[i]->select(0);
             if (update_view)
@@ -1986,8 +1986,6 @@ void Menu::webtiles_update_items(int start, int end) const
     {
         tiles.json_open_object();
         const MenuEntry* me = items[i];
-        if (me->selected_qty)
-            tiles.json_write_int("sq", me->selected_qty);
         tiles.json_write_string("text", me->get_text());
         int col = item_colour(me);
         // previous colour field is deleted by client if new one not sent
@@ -2074,8 +2072,6 @@ void Menu::webtiles_write_item(int index, const MenuEntry* me) const
 
     if (me->quantity)
         tiles.json_write_int("q", me->quantity);
-    if (me->selected_qty)
-        tiles.json_write_int("sq", me->selected_qty);
 
     int col = item_colour(me);
     if (col != MENU_ITEM_STOCK_COLOUR)
