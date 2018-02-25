@@ -139,7 +139,9 @@ public:
     bool is_in_crt_menu();
     bool is_in_menu(Menu* m);
     void pop_menu();
-    void close_all_menus();
+    void push_ui_layout(const string& type);
+    void pop_ui_layout();
+    void pop_all_ui_layouts();
 
     void send_exit_reason(const string& type, const string& message = "");
     void send_dump_info(const string& type, const string& filename);
@@ -233,12 +235,14 @@ protected:
     void json_open(const string& name, char opener, char type);
     void json_close(bool erase_if_empty, char type);
 
-    struct MenuInfo
+    struct UIStackFrame
     {
-        string tag;
+        enum { MENU, CRT, UI, } type;
         Menu* menu;
+        string crt_tag;
+        string ui_json;
     };
-    vector<MenuInfo> m_menu_stack;
+    vector<UIStackFrame> m_menu_stack;
 
     WebtilesUIState m_ui_state;
     WebtilesUIState m_last_ui_state;
