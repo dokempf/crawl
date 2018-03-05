@@ -572,7 +572,7 @@ void TilesFramework::pop_all_ui_layouts()
     m_menu_stack.clear();
 }
 
-void TilesFramework::push_ui_layout(const string& type)
+void TilesFramework::push_ui_layout(const string& type, unsigned num_state_slots)
 {
     ASSERT(m_json_stack.size() == 1);
     ASSERT(m_json_stack.back().type == '}'); // enums, schmenums
@@ -581,7 +581,8 @@ void TilesFramework::push_ui_layout(const string& type)
     tiles.json_close_object();
     UIStackFrame frame;
     frame.type = UIStackFrame::UI;
-    frame.ui_json = m_msg_buf;
+    frame.ui_json.resize(num_state_slots+1);
+    frame.ui_json[0] = m_msg_buf;
     m_menu_stack.push_back(frame);
     tiles.finish_message();
 }
@@ -591,6 +592,20 @@ void TilesFramework::pop_ui_layout()
     if (m_menu_stack.empty()) return;
     m_menu_stack.pop_back();
     send_message("{\"msg\":\"ui-pop\"}");
+}
+
+void TilesFramework::ui_state_change(const string& type, unsigned state_slot)
+{
+    ASSERT(!m_menu_stack.empty());
+    UIStackFrame &top = m_menu_stack.back();
+    ASSERT(top.type == UIStackFrame::UI);
+    ASSERT(m_json_stack.size() == 1);
+    ASSERT(m_json_stack.back().type == '}');
+    tiles.json_write_string("msg", "ui-state");
+    tiles.json_write_string("type", type);
+    tiles.json_close_object();
+    top.ui_json[state_slot+1] = m_msg_buf;
+    tiles.finish_message();
 }
 
 static void _send_text_cursor(bool enabled)
@@ -1673,7 +1688,15 @@ void TilesFramework::_send_everything()
             json_close_object();
         }
         else
-            m_msg_buf.append(frame.ui_json);
+        {
+            for (const auto& json : frame.ui_json)
+                if (!json.empty())
+                {
+                    m_msg_buf.append(json);
+                    json_write_comma();
+                }
+            continue;
+        }
         json_write_comma();
     }
     json_close_array();

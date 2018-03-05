@@ -139,9 +139,10 @@ public:
     bool is_in_crt_menu();
     bool is_in_menu(Menu* m);
     void pop_menu();
-    void push_ui_layout(const string& type);
+    void push_ui_layout(const string& type, unsigned num_state_slots);
     void pop_ui_layout();
     void pop_all_ui_layouts();
+    void ui_state_change(const string& type, unsigned state_slot);
 
     void send_exit_reason(const string& type, const string& message = "");
     void send_dump_info(const string& type, const string& filename);
@@ -240,7 +241,7 @@ protected:
         enum { MENU, CRT, UI, } type;
         Menu* menu;
         string crt_tag;
-        string ui_json;
+        vector<string> ui_json;
     };
     vector<UIStackFrame> m_menu_stack;
 
