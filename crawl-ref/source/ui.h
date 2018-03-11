@@ -417,7 +417,11 @@ public:
 class UIScroller : public UIBin
 {
 public:
-    UIScroller() : m_scroll(0) {};
+    UIScroller() : m_scroll(0)
+#ifdef USE_TILE_LOCAL
+    , m_shade_buf(false, true)
+#endif
+    {};
 
     void set_child(shared_ptr<UI> child);
     virtual void set_scroll(int y);
@@ -428,6 +432,9 @@ public:
     virtual bool on_event(wm_event event) override;
 protected:
     int m_scroll;
+#ifdef USE_TILE_LOCAL
+    VertBuffer m_shade_buf;
+#endif
 };
 
 class UIPopup : public UIBin
