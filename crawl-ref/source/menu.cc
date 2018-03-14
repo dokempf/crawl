@@ -1294,8 +1294,9 @@ bool Menu::allow_easy_exit() const
 
 string Menu::get_select_count_string(int count) const
 {
+    string ret;
     if (f_selitem)
-        return f_selitem(&sel);
+        ret = f_selitem(&sel);
     else
     {
         char buf[100] = "";
@@ -1304,8 +1305,9 @@ string Menu::get_select_count_string(int count) const
             snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
                     (count > 1 ? "s" : ""));
         }
-        return string(buf);
+        ret = string(buf);
     }
+    return ret + string(max(12-(int)ret.size(), 0), ' ');
 }
 
 vector<MenuEntry*> Menu::selected_entries() const
