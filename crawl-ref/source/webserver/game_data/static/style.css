@@ -663,6 +663,24 @@ body {
     white-space: pre;
 }
 
+.spellset ol {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0.4em 0;
+}
+.spellset li {
+    box-sizing: border-box;
+    flex: 0 0 50%;
+    max-width: 50%;
+    display: flex;
+    align-items: center;
+}
+.spellset li > span:nth-child(2) {
+    flex: 1 1 auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 /* Use crisp (nearest-neighbor) upscaling on HiDPI screens to avoid blurriness. */
 @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
     canvas {
