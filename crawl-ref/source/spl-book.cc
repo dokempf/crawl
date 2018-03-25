@@ -17,6 +17,7 @@
 
 #include "artefact.h"
 #include "colour.h"
+#include "command.h"
 #include "database.h"
 #include "delay.h"
 #include "describe.h"
@@ -474,7 +475,7 @@ protected:
     {
 #ifdef USE_TILE_LOCAL
         return formatted_string::parse_string(
-                    make_stringf("<w> Your Spells - [%s] (toggle with '!')",
+                    make_stringf("<w> Your Spells - [%s] (toggle with <blue>!</blue>, <blue>?</blue> for help)",
                         current_action == action::memorise ?
                             "<blue>Memorise</blue><w>|Describe|Hide|Show" :
                         current_action == action::describe ?
@@ -529,7 +530,7 @@ private:
     virtual bool process_key(int keyin) override
     {
         bool entries_changed = false;
-        if (keyin == '!' || keyin == '?'
+        if (keyin == '!'
 #ifdef TOUCH_UI
             || keyin == CK_TOUCH_DUMMY
 #endif
@@ -567,6 +568,8 @@ private:
                 search_text = "";
             entries_changed = old_search != search_text;
         }
+        else if (keyin == '?')
+            show_spell_library_help();
         else
             return Menu::process_key(keyin);
 
