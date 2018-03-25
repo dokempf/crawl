@@ -333,6 +333,20 @@ body {
     margin-bottom: 0 !important;
 }
 
+/* paneset */
+.paneset {
+    display: inline-grid;
+    overflow: hidden;
+}
+.paneset > .pane {
+    grid-row: 1;
+    grid-column: 1;
+    visibility: hidden;
+}
+.paneset > .pane.current {
+    visibility: visible;
+}
+
 /* menus */
 .menu {
     line-height: 1.2em;
