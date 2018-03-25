@@ -1313,7 +1313,7 @@ string Menu::get_select_count_string(int count) const
         char buf[100] = "";
         if (count)
         {
-            snprintf(buf, sizeof buf, "  (%d item%s)  ", count,
+            snprintf(buf, sizeof buf, " (%d item%s)", count,
                     (count > 1 ? "s" : ""));
         }
         ret = string(buf);
